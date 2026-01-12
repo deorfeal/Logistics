@@ -1,14 +1,14 @@
 // Aos - the right initialisation
 jQuery(document).ready(function () {
-    (function () {
-        // your page initialization code here
-        // the DOM will be available here
-        AOS.init({
-            duration: 750,
-            offset: 0, // offset (in px) from the original trigger point
-            anchorPlacement: 'top-bottom', // define where the AOS animations will be triggered
-        });
-    })();
+  (function () {
+    // your page initialization code here
+    // the DOM will be available here
+    AOS.init({
+      duration: 750,
+      offset: 0, // offset (in px) from the original trigger point
+      anchorPlacement: "top-bottom", // define where the AOS animations will be triggered
+    });
+  })();
 });
 // //
 
@@ -47,48 +47,39 @@ $(function () {
   });
 });
 
-new Swiper(".recalls-swiper", {
-  slidesPerView: 3,
-  loop: true,
-  spaceBetween: 30,
-  speed: 750,
-  navigation: {
-    prevEl: ".arrow--recalls-prev",
-    nextEl: ".arrow--recalls-next",
-  },
-  pagination: {
-    el: ".pagination--recalls",
-    type: "bullets",
-    clickable: true,
-  },
-  // autoplay: {
-  //     delay: 5000, // задержка между слайдами в миллисекундах
-  //     disableOnInteraction: false, // если true, автопрокрутка остановится при взаимодействии пользователя с swiper
-  // },
-  breakpoints: {
-    301: {
-      slidesPerView: 1,
-      loop: true,
-      spaceBetween: 15,
-      speed: 750,
-    },
-    769: {
-      slidesPerView: 2,
-      loop: true,
-      spaceBetween: 20,
-      speed: 750,
-    },
-    992: {
-      slidesPerView: 3,
-      loop: true,
-      spaceBetween: 30,
-      speed: 750,
-    },
-  },
-});
+//
+if (document.querySelector(".services-items")) {
+  const items = document.querySelectorAll(".services-items__item");
+  const backgrounds = document.querySelectorAll(".services-bg");
+
+  const DEFAULT_INDEX = 0;
+
+  function setActive(index) {
+    items.forEach((item) => item.classList.remove("services-item--active"));
+    backgrounds.forEach((bg) => bg.classList.remove("services-bg--active"));
+
+    items[index].classList.add("services-item--active");
+    backgrounds[index].classList.add("services-bg--active");
+  }
+
+  // hover по айтему
+  items.forEach((item, index) => {
+    item.addEventListener("mouseenter", () => {
+      setActive(index);
+    });
+  });
+
+  // уход мыши со всего блока айтемов → вернуть первый
+  const itemsWrapper = document.querySelector(".services-items");
+
+  itemsWrapper.addEventListener("mouseleave", () => {
+    setActive(DEFAULT_INDEX);
+  });
+}
+//
 
 new Swiper(".partners-swiper", {
-  slidesPerView: 8,
+  slidesPerView: 10,
   loop: true,
   spaceBetween: 50,
   speed: 750,
@@ -116,7 +107,7 @@ new Swiper(".partners-swiper", {
       speed: 750,
     },
     1201: {
-      slidesPerView: 8,
+      slidesPerView: 10,
       loop: true,
       spaceBetween: 50,
       speed: 750,
@@ -125,7 +116,7 @@ new Swiper(".partners-swiper", {
 });
 
 new Swiper(".news-swiper", {
-  slidesPerView: 3,
+  slidesPerView: 4,
   loop: true,
   spaceBetween: 30,
   speed: 750,
@@ -152,7 +143,7 @@ new Swiper(".news-swiper", {
       speed: 750,
     },
     1201: {
-      slidesPerView: 3,
+      slidesPerView: 4,
       loop: true,
       spaceBetween: 30,
       speed: 750,
@@ -160,7 +151,108 @@ new Swiper(".news-swiper", {
   },
 });
 
+new Swiper(".advantages-swiper", {
+  slidesPerView: 5,
+  loop: true,
+  spaceBetween: 30,
+  speed: 750,
+  navigation: {
+    prevEl: ".arrow--advantages-prev",
+    nextEl: ".arrow--advantages-next",
+  },
+  pagination: {
+    el: ".pagination--advantages",
+    type: "bullets",
+    clickable: true,
+  },
+  breakpoints: {
+    301: {
+      slidesPerView: 1,
+      loop: true,
+      spaceBetween: 15,
+      speed: 750,
+    },
+    551: {
+      slidesPerView: 2,
+      loop: true,
+      spaceBetween: 20,
+      speed: 750,
+    },
+    993: {
+      slidesPerView: 3,
+      loop: true,
+      spaceBetween: 20,
+      speed: 750,
+    },
+    1201: {
+      slidesPerView: 5,
+      loop: true,
+      spaceBetween: 30,
+      speed: 750,
+    },
+  },
+});
+
+if (document.querySelector(".langs")) {
+  const langs = document.querySelector(".langs");
+  const langsList = document.querySelector(".langs-list");
+  const items = langsList.querySelectorAll(".langs-item");
+
+  // Создаем кружок
+  const highlight = document.createElement("div");
+  highlight.classList.add("langs__highlight");
+  langs.appendChild(highlight);
+
+  // Находим активный элемент
+  let activeItem = langsList.querySelector(".langs-item--active");
+
+  function moveHighlight(target) {
+    const rect = target.getBoundingClientRect();
+    const parentRect = langsList.getBoundingClientRect();
+    const left = rect.left - parentRect.left;
+    highlight.style.transform = `translate(${left}px, -50%)`;
+  }
+
+  // Изначально на активном
+  moveHighlight(activeItem);
+
+  // Ховер по элементам
+  items.forEach((item) => {
+    item.addEventListener("mouseenter", () => moveHighlight(item));
+    item.addEventListener("mouseleave", () => moveHighlight(activeItem));
+  });
+}
+
+// *** Tabs ***
+document.querySelectorAll(".tub[data-tubs]").forEach((tab, index, tabList) => {
+  tab.addEventListener("click", () => {
+    const group = tab.dataset.tubs;
+
+    // Найдём все табы и элементы контента с тем же data-tubs
+    const tabs = Array.from(
+      document.querySelectorAll(`.tub[data-tubs="${group}"]`)
+    );
+    const contents = Array.from(
+      document.querySelectorAll(`.tub-element[data-tubs="${group}"]`)
+    );
+
+    const tabIndex = tabs.indexOf(tab);
+
+    // Сброс классов у всех табов этой группы
+    tabs.forEach((t) => t.classList.remove("tub--active"));
+    tab.classList.add("tub--active");
+
+    // Сброс классов у всех элементов этой группы
+    contents.forEach((el) => el.classList.remove("tub-element--active"));
+    if (contents[tabIndex]) {
+      contents[tabIndex].classList.add("tub-element--active");
+    }
+  });
+});
+// //
+
 document.addEventListener("DOMContentLoaded", function () {
+  if (!document.querySelector(".calculation")) return;
   // ----------------------
   // 1. Кастомный select
   // ----------------------
@@ -255,5 +347,3 @@ document.addEventListener("DOMContentLoaded", function () {
   // инициализируем прогресс
   updateProgress();
 });
-
-
